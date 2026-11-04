@@ -476,7 +476,10 @@ input.txt:focus{outline:none;border-color:var(--brass)}
 .srow.free button.add{justify-self:start;min-height:40px;padding:0 12px;border-radius:10px;border:1px dashed var(--line);background:transparent;color:var(--smoke);cursor:pointer;font-size:14px}
 .srow.free button.add:hover{border-color:var(--brass);color:var(--brass)}
 .srow.cont .tm{opacity:.4}
-.srow.cont .bar-c{height:100%;min-height:36px;border-left:2px solid var(--brass);margin-left:6px;opacity:.5}
+.srow.cont .bar-c{display:flex;align-items:center;gap:4px;min-height:40px;padding:0 14px;border-radius:12px;background:rgba(201,164,106,.08);border:1px solid rgba(201,164,106,.25);border-left:4px solid var(--brass);font-size:13.5px;color:var(--smoke);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.srow.cont .bar-c b{color:var(--bone);font-weight:600}
+.srow.cont .bar-c.st-concluido{border-left-color:var(--wa);background:rgba(37,211,102,.06);border-color:rgba(37,211,102,.25)}
+.srow.cont .bar-c.st-faltou{border-left-color:var(--oxblood-hi)}
 .srow.blk .lbl-b{display:flex;gap:10px;align-items:center;color:var(--smoke);font-size:14px}
 .srow.blk .lbl-b button{min-height:36px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:transparent;color:var(--bone);cursor:pointer;font-size:13px}
 .bk{display:grid;gap:6px;padding:12px 14px;border-radius:14px;background:var(--ink-3);border:1px solid rgba(201,164,106,.35);border-left:4px solid var(--brass)}
@@ -1465,11 +1468,11 @@ function slotsAny(dateStr,dur){
       ps.forEach(function(p){
         h+='<div class="per-h">'+p.lab+' · '+toHM(p.s)+' às '+toHM(p.e)+'</div>';
         for(var m=p.s;m<p.e;m+=stp){
-          var b=mine.filter(function(x){return toM(x.start)===m})[0];
+          var b=mine.filter(function(x){var s0=toM(x.start);return s0>=m&&s0<m+stp})[0];
           var cover=mine.filter(function(x){var s=toM(x.start);return s<m&&m<s+(+x.dur||30)})[0];
           var blk=S.sched.blocks.indexOf(nm+'|'+A.day+'|'+toHM(m))>=0;
           if(b){h+='<div class="srow"><span class="tm">'+toHM(m)+'</span>'+bkCard(b)+'</div>'}
-          else if(cover){h+='<div class="srow cont"><span class="tm">'+toHM(m)+'</span><span class="bar-c"></span></div>'}
+          else if(cover){var ce=toM(cover.start)+(+cover.dur||30);h+='<div class="srow cont"><span class="tm">'+toHM(m)+'</span><span class="bar-c st-'+esc(cover.status)+'"><b>'+esc(cover.nome)+'</b> · continua até '+toHM(ce)+'</span></div>'}
           else if(blk){h+='<div class="srow blk"><span class="tm">'+toHM(m)+'</span><span class="lbl-b">Bloqueado <button type="button" data-unblock="'+nm+'|'+A.day+'|'+toHM(m)+'">Liberar</button></span></div>'}
           else{var past=isPast(A.day,m);h+='<div class="srow free"><span class="tm">'+toHM(m)+'</span>'+(past?'<span style="color:var(--smoke);font-size:13px;opacity:.5">—</span>':'<button type="button" class="add" data-new="'+nm+'|'+m+'">+ Agendar</button>')+'</div>'}
         }
