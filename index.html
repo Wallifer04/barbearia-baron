@@ -320,6 +320,7 @@ html.io .rv.pending{opacity:0;transform:translateY(28px)}
 .plan.feat{background:linear-gradient(180deg,#2a2018,var(--ink-2));border-color:rgba(201,164,106,.5);box-shadow:0 40px 80px -40px rgba(201,164,106,.35)}
 .plan .tag{position:absolute;top:-12px;left:28px;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;background:var(--brass);color:var(--ink);border-radius:99px;padding:5px 12px}
 .plan h3{font-size:30px}
+.plan .soon-t{display:inline-flex;justify-self:start;font-family:var(--f-mono);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--brass);border:1px solid rgba(201,164,106,.45);border-radius:99px;padding:6px 14px}
 .plan .val{display:flex;align-items:baseline;gap:6px;font-family:var(--f-display)}
 .plan .val b{font-size:52px;font-weight:500;line-height:1}
 .plan .val small{font-family:var(--f-body);color:var(--smoke);font-size:15px}
@@ -478,7 +479,20 @@ input.txt:focus{outline:none;border-color:var(--brass)}
 .pass-f{display:flex;flex-wrap:wrap;gap:8px;align-items:center;width:100%}
 .pass-f .txt{max-width:220px}
 @keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
-.adm-tabs{max-width:640px;margin-bottom:28px}
+.adm-tabs{max-width:720px;margin-bottom:28px}
+#admTabs{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:560px){#admTabs button{font-size:12.5px;padding:0 2px}}
+.sv-ed{display:grid;gap:16px;max-width:640px}
+.sv-cat{padding:20px;border-radius:22px;background:var(--ink-2);border:1px solid var(--line);display:grid;gap:4px}
+.sv-cat h3{font-size:22px;margin-bottom:6px}
+.sv-r{display:grid;grid-template-columns:minmax(0,1fr) 110px 104px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid rgba(236,228,214,.06)}
+.sv-r:last-child{border-bottom:0}
+.sv-n{font-size:14.5px;min-width:0}
+.sv-p{display:flex;align-items:center;gap:6px;min-height:42px;border-radius:10px;border:1px solid var(--line);background:var(--ink);padding:0 10px}
+.sv-p span{font-size:13px;color:var(--smoke)}
+.sv-p input{width:100%;min-width:0;border:0;background:transparent;color:var(--bone);font:inherit;font-family:var(--f-mono);outline:none}
+.sv-t{min-height:42px;border-radius:10px;border:1px solid var(--line);background:var(--ink);color:var(--bone);font:inherit;font-size:13.5px;padding:0 8px;width:100%}
+@media (max-width:520px){.sv-r{grid-template-columns:minmax(0,1fr) 96px;row-gap:6px}.sv-n{grid-column:1/-1}.sv-t{grid-column:2}.sv-p{grid-column:1}}
 .adm-top{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:20px}
 .days.scroll{display:flex;overflow-x:auto;gap:6px;padding-bottom:6px;scrollbar-width:thin;max-width:100%}
 .days.scroll .day{flex:0 0 64px}
@@ -768,7 +782,7 @@ main{padding-bottom:64px}
       <div class="explore">
         <a class="ex rv" href="#servicos"><div class="num"><span>Cardápio</span><svg class="i"><use href="#i-scissors"/></svg></div><div><h3>Serviços</h3><p>Cortes, barba, combos e tratamentos, com tempo e valor de cada um.</p><span class="go">Ver cardápio<svg class="i"><use href="#i-arrow"/></svg></span></div></a>
         <a class="ex rv d1" href="#experiencia"><div class="num"><span>Ritual</span><svg class="i"><use href="#i-chair"/></svg></div><div><h3>Experiência</h3><p>Como é a sua visita, passo a passo, e o que você encontra na casa.</p><span class="go">Conhecer<svg class="i"><use href="#i-arrow"/></svg></span></div></a>
-        <a class="ex rv d2" href="#clube"><div class="num"><span>Assinatura</span><svg class="i"><use href="#i-crown"/></svg></div><div><h3>Clube Baron</h3><p>Plano mensal para quem não abre mão de estar sempre na régua.</p><span class="go">Ver planos<svg class="i"><use href="#i-arrow"/></svg></span></div></a>
+        <a class="ex rv d2" href="#clube"><div class="num"><span>Assinatura</span><svg class="i"><use href="#i-crown"/></svg></div><div><h3>Clube Baron</h3><p>Em breve: plano mensal para quem não abre mão de estar sempre na régua.</p><span class="go">Ver planos<svg class="i"><use href="#i-arrow"/></svg></span></div></a>
         <a class="ex rv d3" href="#agendar"><div class="num"><span>Agenda</span><svg class="i"><use href="#i-cal"/></svg></div><div><h3>Agendar</h3><p>Escolha serviço, dia e período. Confirme no app ou no WhatsApp.</p><span class="go">Marcar agora<svg class="i"><use href="#i-arrow"/></svg></span></div></a>
       </div>
     </div>
@@ -823,7 +837,7 @@ main{padding-bottom:64px}
       <div class="am rv"><svg class="i"><use href="#i-coffee"/></svg><h3>Café e bebidas</h3><p>Um café ou uma cerveja gelada enquanto espera a sua vez.</p></div>
       <div class="am rv d1"><svg class="i"><use href="#i-wifi"/></svg><h3>Wi‑Fi liberado</h3><p>Para quem precisa resolver algo antes de sentar na cadeira.</p></div>
       <div class="am rv d2"><svg class="i"><use href="#i-snow"/></svg><h3>Ambiente climatizado</h3><p>Conforto o ano inteiro, mesmo no calor mais forte.</p></div>
-      <div class="am rv"><svg class="i"><use href="#i-card"/></svg><h3>Pix e cartão</h3><p>Pague como preferir, inclusive no plano mensal do Clube.</p></div>
+      <div class="am rv"><svg class="i"><use href="#i-card"/></svg><h3>Pix e cartão</h3><p>Pague como preferir: Pix, cartão ou dinheiro.</p></div>
       <div class="am rv d1"><svg class="i"><use href="#i-car"/></svg><h3>Fácil de estacionar</h3><p>Vaga próxima para você chegar e sair sem stress.</p></div>
       <div class="am rv d2"><svg class="i"><use href="#i-cal"/></svg><h3>Agenda online 24h</h3><p>Marque, veja seus horários e escolha o barbeiro a qualquer hora.</p></div>
     </div>
@@ -871,28 +885,13 @@ main{padding-bottom:64px}
   <div class="page-hero"><div class="wrap">
     <span class="eyebrow">Assinatura mensal</span>
     <h1 style="margin-top:16px">Clube <em>Baron</em></h1>
-    <p class="lead">Pague um valor fixo por mês e mantenha o visual sempre em dia. Sem precisar pensar em quanto vai gastar.</p>
-    <div style="margin-top:20px"><span class="ph-tag">Sugestão de planos · valores a definir com a Baron</span></div>
+    <p class="lead">Planos mensais para manter o visual sempre em dia. Os detalhes de cada plano chegam em breve.</p>
   </div></div>
   <section style="padding-top:40px"><div class="wrap">
     <div class="plans">
-      <div class="plan rv"><h3>Cavalheiro</h3><div class="val"><b class="ph">R$ 99</b><small>/mês</small></div><ul>
-        <li><svg class="i"><use href="#i-check"/></svg>2 cortes por mês</li>
-        <li><svg class="i"><use href="#i-check"/></svg>Agendamento prioritário</li>
-        <li><svg class="i"><use href="#i-check"/></svg>10% em produtos</li></ul>
-        <a class="btn ghost" data-wa="Olá! Quero saber mais sobre o plano Cavalheiro do Clube Baron." href="#">Quero este</a></div>
-      <div class="plan feat rv d1"><span class="tag">Mais escolhido</span><h3>Barão</h3><div class="val"><b class="ph">R$ 149</b><small>/mês</small></div><ul>
-        <li><svg class="i"><use href="#i-check"/></svg>Cortes ilimitados</li>
-        <li><svg class="i"><use href="#i-check"/></svg>2 barbas por mês</li>
-        <li><svg class="i"><use href="#i-check"/></svg>Agendamento prioritário</li>
-        <li><svg class="i"><use href="#i-check"/></svg>15% em produtos</li></ul>
-        <a class="btn" data-wa="Olá! Quero assinar o plano Barão do Clube Baron." href="#">Quero este</a></div>
-      <div class="plan rv d2"><h3>Imperial</h3><div class="val"><b class="ph">R$ 219</b><small>/mês</small></div><ul>
-        <li><svg class="i"><use href="#i-check"/></svg>Cortes e barbas ilimitados</li>
-        <li><svg class="i"><use href="#i-check"/></svg>Sobrancelha e depilação inclusas</li>
-        <li><svg class="i"><use href="#i-check"/></svg>Bebida da casa em toda visita</li>
-        <li><svg class="i"><use href="#i-check"/></svg>20% em produtos</li></ul>
-        <a class="btn ghost" data-wa="Olá! Quero saber mais sobre o plano Imperial do Clube Baron." href="#">Quero este</a></div>
+      <div class="plan soon rv"><h3>Cavalheiro</h3><span class="soon-t">Em breve</span><a class="btn ghost" data-wa="Olá! Quero ser avisado quando o plano Cavalheiro do Clube Baron estiver disponível." href="#">Quero ser avisado</a></div>
+      <div class="plan soon feat rv d1"><h3>Barão</h3><span class="soon-t">Em breve</span><a class="btn" data-wa="Olá! Quero ser avisado quando o plano Barão do Clube Baron estiver disponível." href="#">Quero ser avisado</a></div>
+      <div class="plan soon rv d2"><h3>Imperial</h3><span class="soon-t">Em breve</span><a class="btn ghost" data-wa="Olá! Quero ser avisado quando o plano Imperial do Clube Baron estiver disponível." href="#">Quero ser avisado</a></div>
     </div>
   </div></section>
 </div>
@@ -1003,6 +1002,14 @@ main{padding-bottom:64px}
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
           <button class="btn" id="schedSave" type="button"><svg class="i"><use href="#i-check"/></svg>Salvar horários</button>
           <button class="btn ghost" id="schedReset" type="button">Voltar ao expediente padrão</button>
+        </div>
+      </div>
+      <div class="adm-pane" data-pane="servicos" hidden>
+        <p class="lead" style="margin-bottom:24px">Mude o preço e a duração de cada serviço. Ao salvar, o site e a agenda já usam os novos valores.</p>
+        <div class="sv-ed" id="svEd"></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
+          <button class="btn" id="svSave" type="button"><svg class="i"><use href="#i-check"/></svg>Salvar serviços</button>
+          <button class="btn ghost" id="svReset" type="button">Voltar aos valores originais</button>
         </div>
       </div>
       <div class="adm-foot"><button class="btn ghost sm" id="passBtn" type="button">Alterar senha</button><button class="btn ghost sm" id="refreshBtn" type="button">Atualizar agora</button><button class="btn ghost sm" id="logout" type="button">Sair</button>
@@ -1125,8 +1132,8 @@ var FAQ = [
   ['Preciso agendar ou posso chegar na hora?','Recomendamos agendar pela agenda online, que mostra os horários livres em tempo real. Se houver encaixe, atendemos quem chega, mas quem tem horário marcado tem prioridade.'],
   ['Vocês avisam antes do horário?','Sim. Ao agendar pelo site, deixe o lembrete ligado e a Baron te avisa no WhatsApp 1 hora antes. Você também pode salvar o horário na agenda do seu celular.'],
   ['Como faço para remarcar ou cancelar?','Pela própria agenda online ou pelo WhatsApp. Pedimos aviso com antecedência para liberar o horário para outro cliente.'],
-  ['Quais formas de pagamento vocês aceitam?','Pix, cartão de débito e crédito e dinheiro. O Clube Baron é cobrado mensalmente.'],
-  ['Como funciona o Clube Baron?','Você paga um valor fixo por mês e usa os serviços do seu plano quantas vezes ele permitir, com prioridade na agenda.'],
+  ['Quais formas de pagamento vocês aceitam?','Pix, cartão de débito e crédito e dinheiro.'],
+  ['Como vai funcionar o Clube Baron?','Os planos Cavalheiro, Barão e Imperial chegam em breve. Chame a Baron no WhatsApp para ser avisado quando abrirem.'],
   ['Posso escolher o barbeiro?','Sim. Na agenda você escolhe o profissional ou marca "sem preferência" para pegar o primeiro horário livre.']
 ];
 
@@ -1183,8 +1190,10 @@ document.addEventListener('pointermove',function(e){var c=e.target.closest('.ex'
       return '<div class="item" style="animation-delay:'+(i*0.06)+'s"><h4>'+(s.img?'<img class="thumb-s" src="'+s.img+'" alt="">':'')+'<span class="nm-t">'+plusify(s.n)+'</span></h4><span class="price">'+brl(s.p)+'</span><p>'+s.d+'</p><div class="meta"><span class="dur'+(s.durPh?' ph':'')+'">'+icon('i-clock')+s.t+' min</span>'+(s.tag?'<span class="hot">'+s.tag+'</span>':'')+'<a class="book" href="#agendar" data-svc="'+s.n+'">Agendar'+icon('i-arrow')+'</a></div></div>';
     }).join('');
   }
-  tabs.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$$('button',tabs).forEach(function(x){x.setAttribute('aria-selected',x===b)});render(b.dataset.c)});
-  render(cats[0]);
+  var cur=cats[0];
+  tabs.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;$$('button',tabs).forEach(function(x){x.setAttribute('aria-selected',x===b)});cur=b.dataset.c;render(cur)});
+  render(cur);
+  var sig='';setTimeout(function(){onData(function(){var n=JSON.stringify((S.sched&&S.sched.svc)||{});if(n!==sig){sig=n;render(cur)}})},0);
 })();
 
 /* ======= equipe ======= */
@@ -1283,6 +1292,14 @@ function loadAdmin(){
     S.bookings=d.bookings.map(mapB);S.sched=normSched(d.sched);S.ready=true;S.online=true;S.mode='online';emit();
   },function(){S.online=false;emit()});
 }
+function applySvc(){
+  var o=(S.sched&&S.sched.svc)||{};
+  Object.keys(SERVICES).forEach(function(c){SERVICES[c].forEach(function(x){
+    if(x._p0==null){x._p0=x.p;x._t0=x.t;x._ph0=!!x.durPh}
+    var v=o[x.n];x.p=(v&&v.p!=null)?+v.p:x._p0;x.t=(v&&v.t)?+v.t:x._t0;x.durPh=(v&&v.t)?false:x._ph0;
+  })});
+}
+onData(applySvc);
 function refresh(){return S.admin?loadAdmin():loadPublic()}
 setInterval(function(){if(!document.hidden)refresh()},20000);
 document.addEventListener('visibilitychange',function(){if(!document.hidden)refresh()});
@@ -1443,7 +1460,7 @@ function slotsAny(dateStr,dur){
   };
   document.addEventListener('click',function(e){var a=e.target.closest('[data-svc],[data-barber]');if(!a)return;window.__bkPick(a.getAttribute('data-svc'),a.getAttribute('data-barber'))});
   renderSvc();render();
-  onData(function(){buildDays();render()});
+  var svSig='';onData(function(){var n=JSON.stringify((S.sched&&S.sched.svc)||{});if(n!==svSig){svSig=n;renderSvc()}buildDays();render()});
   setInterval(function(){if(!document.hidden){buildDays();render()}},60000);
 })();
 
@@ -1471,10 +1488,10 @@ function slotsAny(dateStr,dur){
     admCall('change_pass',{'new':v}).then(function(){S.admin=v;try{if(localStorage.getItem(KEY))localStorage.setItem(KEY,v)}catch(er){}$('#newPass').value='';$('#passForm').hidden=true;toast('Senha alterada. Use a nova senha nos outros aparelhos.')},function(er){toast(errMsg(er))})});
   (function(){var saved=null;try{saved=localStorage.getItem(KEY)}catch(e){}if(saved)enter(saved,true,true)})();
 
-  var TABS=[['agenda','Agenda'],['relatorios','Relatórios'],['clientes','Clientes'],['horarios','Horários']];
+  var TABS=[['agenda','Agenda'],['relatorios','Relatórios'],['clientes','Clientes'],['horarios','Horários'],['servicos','Serviços']];
   var tabEl=$('#admTabs');
   tabEl.innerHTML='<span class="thumb"></span>'+TABS.map(function(t){return '<button type="button" role="tab" data-t="'+t[0]+'">'+t[1]+'</button>'}).join('');
-  tabEl.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;A.tab=b.dataset.t;if(A.tab==='horarios')draft=null;renderAll()});
+  tabEl.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;A.tab=b.dataset.t;if(A.tab==='horarios')draft=null;if(A.tab==='servicos')svDraft=null;renderAll()});
 
   function mode(){var m=$('#admMode');var c=S.online&&S.ready;m.classList.toggle('cloud',c);m.lastElementChild.textContent=c?'Conectado: a agenda se atualiza sozinha a cada 20 segundos':(S.online?'Conectando à agenda…':'Sem conexão. Tentando de novo…')}
 
@@ -1482,7 +1499,7 @@ function slotsAny(dateStr,dur){
     mode();if(adm.hidden)return;
     $$('button',tabEl).forEach(function(b){b.setAttribute('aria-selected',b.dataset.t===A.tab)});requestAnimationFrame(function(){window.__moveThumb(tabEl)});
     $$('.adm-pane').forEach(function(p){p.hidden=p.dataset.pane!==A.tab});
-    if(A.tab==='agenda')renderAgenda();if(A.tab==='relatorios')renderRep();if(A.tab==='clientes')renderCli();if(A.tab==='horarios')renderSched();
+    if(A.tab==='agenda')renderAgenda();if(A.tab==='relatorios')renderRep();if(A.tab==='clientes')renderCli();if(A.tab==='horarios')renderSched();if(A.tab==='servicos')renderSvcEd();
   }
 
   /* agenda do dia */
@@ -1553,7 +1570,7 @@ function slotsAny(dateStr,dur){
 
   /* modal: agendar pelo painel / bloquear */
   var M={};
-  var mSvc=$('#mSvc');mSvc.innerHTML=Object.keys(SERVICES).map(function(c){return '<optgroup label="'+c+'">'+SERVICES[c].map(function(s){return '<option value="'+s.n+'">'+s.n+' · '+s.t+' min</option>'}).join('')+'</optgroup>'}).join('');
+  var mSvc=$('#mSvc');function fillMSvc(){mSvc.innerHTML=Object.keys(SERVICES).map(function(c){return '<optgroup label="'+c+'">'+SERVICES[c].map(function(s){return '<option value="'+s.n+'">'+s.n+' · '+s.t+' min · R$ '+s.p+'</option>'}).join('')+'</optgroup>'}).join('')}fillMSvc();onData(fillMSvc);
   function openModal(barber,day,m){M={barber:barber,day:day,m:m};$('#mSub').textContent=barber+' · '+fmtDay(day)+' · '+toHM(m);$('#mName').value='';$('#mTel').value='';$('#modal').classList.add('open');$('#modal').setAttribute('aria-hidden','false');setTimeout(function(){$('#mName').focus()},50)}
   function closeModal(){$('#modal').classList.remove('open');$('#modal').setAttribute('aria-hidden','true')}
   $('#mClose').addEventListener('click',closeModal);$('#modal').addEventListener('click',function(e){if(e.target.id==='modal')closeModal()});
@@ -1629,12 +1646,26 @@ function slotsAny(dateStr,dur){
   }
   $('#schedSave').addEventListener('click',function(){
     var pr=schedProblem();if(pr){toast(pr);return}
-    draft.blocks=clone(S.sched.blocks);
+    draft.blocks=clone(S.sched.blocks);if(S.sched.svc)draft.svc=clone(S.sched.svc);
     saveSched(draft).then(function(){draft=null;toast('Horários salvos. A agenda do site já mostra os novos horários.');renderSched()},function(){});
   });
+  var svDraft=null,DURS=[15,20,30,40,45,50,60,75,90,105,120];
+  function renderSvcEd(){
+    if(!svDraft){svDraft={};Object.keys(SERVICES).forEach(function(c){SERVICES[c].forEach(function(x){svDraft[x.n]={p:x.p,t:x.t}})})}
+    $('#svEd').innerHTML=Object.keys(SERVICES).map(function(c){return '<div class="sv-cat"><h3>'+c+'</h3>'+SERVICES[c].map(function(x){var v=svDraft[x.n];
+      return '<div class="sv-r" data-n="'+esc(x.n)+'"><span class="sv-n">'+esc(x.n)+'</span><label class="sv-p"><span>R$</span><input type="number" inputmode="decimal" min="0" step="1" data-k="p" value="'+v.p+'" aria-label="Preço de '+esc(x.n)+'"></label><select class="sv-t" data-k="t" aria-label="Duração de '+esc(x.n)+'">'+DURS.concat(DURS.indexOf(+v.t)<0?[+v.t]:[]).sort(function(a,b){return a-b}).map(function(d){return '<option value="'+d+'"'+(d===+v.t?' selected':'')+'>'+d+' min</option>'}).join('')+'</select></div>'}).join('')+'</div>'}).join('');
+  }
+  $('#svEd').addEventListener('input',function(e){var i=e.target.closest('[data-k]');if(!i)return;var n=i.closest('.sv-r').dataset.n;svDraft[n][i.dataset.k]=i.dataset.k==='p'?i.value:+i.value});
+  $('#svEd').addEventListener('change',function(e){var i=e.target.closest('[data-k]');if(!i)return;var n=i.closest('.sv-r').dataset.n;svDraft[n][i.dataset.k]=i.dataset.k==='p'?i.value:+i.value});
+  $('#svSave').addEventListener('click',function(){
+    var out={},bad='';Object.keys(svDraft).forEach(function(n){var v=svDraft[n],p=String(v.p).replace(',','.');if(p===''||isNaN(+p)||+p<0){bad=n;return}out[n]={p:Math.round(+p*100)/100,t:+v.t}});
+    if(bad){toast('Confira o preço de '+bad+'.');return}
+    var sc=clone(S.sched);sc.svc=out;saveSched(sc).then(function(){svDraft=null;toast('Serviços salvos. O site já mostra os novos preços.');renderSvcEd()},function(){});
+  });
+  $('#svReset').addEventListener('click',function(){svDraft={};Object.keys(SERVICES).forEach(function(c){SERVICES[c].forEach(function(x){svDraft[x.n]={p:x._p0,t:x._t0}})});renderSvcEd();toast('Valores originais carregados. Toque em Salvar para aplicar.')});
   $('#schedReset').addEventListener('click',function(){draft=defaultSched();draft.blocks=clone(S.sched.blocks);renderSched();toast('Expediente padrão carregado. Toque em Salvar para aplicar.')});
 
-  onData(function(){if(adm.hidden){mode();return}if(A.tab==='horarios'){mode();return}renderAll()});
+  onData(function(){if(adm.hidden){mode();return}if(A.tab==='horarios'||A.tab==='servicos'){mode();return}renderAll()});
   window.__admShow=showGate;
   document.addEventListener('keydown',function(e){if(e.key==='Escape')closeModal()});
 })();
