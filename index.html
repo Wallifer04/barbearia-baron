@@ -513,6 +513,15 @@ input.txt:focus{outline:none;border-color:var(--brass)}
 .sc .times .pair{display:flex;gap:6px;align-items:center}
 .sc input[type=time]{min-height:42px;border-radius:10px;border:1px solid var(--line);background:var(--ink);color:var(--bone);font-family:var(--f-mono);padding:0 8px;width:100%;min-width:0}
 .wk{display:grid;gap:4px}
+.dy{display:grid;gap:10px;padding:14px 0;border-bottom:1px solid rgba(236,228,214,.06)}
+.dy-h{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
+.dy-h b{font-weight:600}.dy-sum{font-family:var(--f-mono);font-size:12.5px;color:var(--brass)}.dy-off{font-size:13px;color:var(--smoke)}
+.dy-l{display:grid;gap:8px}.dy-l:empty{display:none}
+.iv{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) 44px;gap:8px;align-items:center}
+.iv .ate{font-size:13px;color:var(--smoke)}
+.iv-x{width:44px;height:42px;border-radius:10px;border:1px solid var(--line);background:transparent;color:var(--smoke);display:grid;place-items:center;cursor:pointer}
+.iv-x svg{width:16px;height:16px}.iv-x:hover{color:var(--bone);border-color:var(--bone)}
+.dy-a{display:flex;gap:8px;flex-wrap:wrap}
 @media (max-width:560px){.sc .times{grid-template-columns:1fr}.sc{padding:20px}}
 .wk-r{display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;min-height:48px;border-bottom:1px solid rgba(236,228,214,.06)}
 .tg{min-height:36px;padding:0 12px;border-radius:99px;border:1px solid var(--line);background:transparent;color:var(--smoke);cursor:pointer;font-size:13px}
@@ -952,7 +961,7 @@ main{padding-bottom:64px}
       </div>
 
       <div class="adm-pane" data-pane="horarios" hidden>
-        <p class="lead" style="margin-bottom:24px">Ligue ou desligue os turnos de cada barbeiro e ajuste os horários. Ao salvar, a agenda do site muda na hora.</p>
+        <p class="lead" style="margin-bottom:24px">Monte o expediente de cada barbeiro dia a dia, com quantos turnos quiser (por exemplo 08:00–12:00, 13:00–16:00 e 20:00–21:00). Dia sem turno fica fechado. Ao salvar, a agenda do site muda na hora.</p>
         <div class="sched" id="schedEd"></div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
           <button class="btn" id="schedSave" type="button"><svg class="i"><use href="#i-check"/></svg>Salvar horários</button>
@@ -1184,15 +1193,30 @@ function fmtTel(s){var d=digits(s);if(d.length===13&&d.indexOf('55')===0)d=d.sli
 
 function defaultBarberSched(){
   // expediente real enviado pela Baron: seg fechado; ter–sex 08–12 e 13–20; sáb 08–12 e 13–17; dom fechado
-  var wk={};for(var i=0;i<7;i++){wk[i]={m:i>=2,t:i>=2,ts:null}}
-  wk[6].te='17:00';
-  return {manha:{s:'08:00',e:'12:00'},tarde:{s:'13:00',e:'20:00'},week:wk};
+  var d={};for(var i=0;i<7;i++)d[i]=[];
+  for(var j=2;j<=5;j++)d[j]=[{s:'08:00',e:'12:00'},{s:'13:00',e:'20:00'}];
+  d[6]=[{s:'08:00',e:'12:00'},{s:'13:00',e:'17:00'}];
+  return {days:d};
+}
+function legacyDays(c){
+  var d={};for(var i=0;i<7;i++){var w=(c.week||{})[i]||{},L=[];
+    if(w.m&&c.manha)L.push({s:w.ms||c.manha.s,e:w.me||c.manha.e});
+    if(w.t&&c.tarde)L.push({s:w.ts||c.tarde.s,e:w.te||c.tarde.e});
+    d[i]=L}
+  return d;
+}
+function cleanDay(L){
+  return (Array.isArray(L)?L:[]).filter(function(x){return x&&/^\d\d:\d\d$/.test(x.s)&&/^\d\d:\d\d$/.test(x.e)&&toM(x.s)<toM(x.e)}).map(function(x){return {s:x.s,e:x.e}}).sort(function(a,b){return toM(a.s)-toM(b.s)});
 }
 function defaultSched(){var o={slot:30,barbers:{},blocks:[]};BNAMES.forEach(function(n){o.barbers[n]=defaultBarberSched()});return o}
 function normSched(s){
   var o=s&&typeof s==='object'?clone(s):defaultSched();
   o.slot=o.slot||30;o.blocks=Array.isArray(o.blocks)?o.blocks:[];o.barbers=o.barbers||{};
-  BNAMES.forEach(function(n){if(!o.barbers[n])o.barbers[n]=defaultBarberSched()});
+  BNAMES.forEach(function(n){var c=o.barbers[n];
+    if(!c){o.barbers[n]=defaultBarberSched();return}
+    var d=c.days?c.days:legacyDays(c),out={};for(var i=0;i<7;i++)out[i]=cleanDay(d[i]);
+    o.barbers[n]={days:out};
+  });
   return o;
 }
 
@@ -1254,12 +1278,11 @@ function remText(b){var m=Math.round((bkStart(b)-new Date())/60000);var q=(m>=45
 function waTo(tel,text){tel=digits(tel);return tel?'https://wa.me/'+(tel.length<=11?'55':'')+tel+'?text='+encodeURIComponent(text):''}
 
 /* disponibilidade */
+function rangesTxt(g){var r=(g.r&&g.r.length?g.r:[[g.s,g.e]]).slice().sort(function(a,b){return a[0]-b[0]}),m=[];r.forEach(function(x){var l=m[m.length-1];if(l&&x[0]<=l[1])l[1]=Math.max(l[1],x[1]);else m.push([x[0],x[1]])});return m.map(function(x){return toHM(x[0])+' às '+toHM(x[1])}).join(' · ')}
+function perLabel(m){return m<720?['manha','Manhã']:(m<1080?['tarde','Tarde']:['noite','Noite'])}
 function periodsFor(barber,dateStr){
-  var c=S.sched.barbers[barber];if(!c)return [];
-  var w=c.week[fromYmd(dateStr).getDay()]||{};var out=[];
-  if(w.m)out.push({k:'manha',lab:'Manhã',s:toM(w.ms||c.manha.s),e:toM(w.me||c.manha.e)});
-  if(w.t)out.push({k:'tarde',lab:'Tarde',s:toM(w.ts||c.tarde.s),e:toM(w.te||c.tarde.e)});
-  return out;
+  var c=S.sched.barbers[barber];if(!c||!c.days)return [];
+  return (c.days[fromYmd(dateStr).getDay()]||[]).map(function(x){var s0=toM(x.s),l=perLabel(s0);return {k:l[0],lab:l[1],s:s0,e:toM(x.e)}});
 }
 function activeBk(){return S.bookings.filter(function(b){return b.status!=='cancelado'})}
 function isBusy(barber,dateStr,m,dur,ignoreId){
@@ -1272,18 +1295,21 @@ function isBlocked(barber,dateStr,m,dur){
 function isPast(dateStr,m){var now=new Date();var t=ymd(now);if(dateStr<t)return true;if(dateStr>t)return false;return m<=now.getHours()*60+now.getMinutes()}
 function slotsFor(barber,dateStr,dur){
   var st=S.sched.slot||30;
-  return periodsFor(barber,dateStr).map(function(p){
+  var out=[];
+  periodsFor(barber,dateStr).forEach(function(p){
     var list=[];for(var m=p.s;m+dur<=p.e;m+=st){list.push({m:m,free:!isPast(dateStr,m)&&!isBusy(barber,dateStr,m,dur)&&!isBlocked(barber,dateStr,m,dur)})}
-    return {k:p.k,lab:p.lab,s:p.s,e:p.e,list:list};
+    var g=out.filter(function(x){return x.k===p.k})[0];
+    if(g){g.list=g.list.concat(list);g.e=Math.max(g.e,p.e);g.r.push([p.s,p.e])}else out.push({k:p.k,lab:p.lab,s:p.s,e:p.e,r:[[p.s,p.e]],list:list});
   });
+  return out;
 }
 function slotsAny(dateStr,dur){
   var groups={};
   BNAMES.forEach(function(n){slotsFor(n,dateStr,dur).forEach(function(g){
-    var G=groups[g.k]||(groups[g.k]={k:g.k,lab:g.lab,s:g.s,e:g.e,map:{}});G.s=Math.min(G.s,g.s);G.e=Math.max(G.e,g.e);
+    var G=groups[g.k]||(groups[g.k]={k:g.k,lab:g.lab,s:g.s,e:g.e,r:[],map:{}});G.s=Math.min(G.s,g.s);G.e=Math.max(G.e,g.e);G.r=G.r.concat(g.r||[]);
     g.list.forEach(function(x){var o=G.map[x.m]||(G.map[x.m]={m:x.m,free:false,who:[]});if(x.free){o.free=true;o.who.push(n)}});
   })});
-  return ['manha','tarde'].filter(function(k){return groups[k]}).map(function(k){var G=groups[k];return {k:k,lab:G.lab,s:G.s,e:G.e,list:Object.keys(G.map).map(function(m){return G.map[m]}).sort(function(a,b){return a.m-b.m})}});
+  return ['manha','tarde','noite'].filter(function(k){return groups[k]}).map(function(k){var G=groups[k];return {k:k,lab:G.lab,s:G.s,e:G.e,r:G.r,list:Object.keys(G.map).map(function(m){return G.map[m]}).sort(function(a,b){return a.m-b.m})}});
 }
 
 /* ======= AGENDAR (cliente) ======= */
@@ -1332,7 +1358,7 @@ function slotsAny(dateStr,dur){
     if(!gs.length){$('#bkSlots').innerHTML='<div class="empty-s">A Baron não atende neste dia. Escolha outro dia.</div>'}
     else $('#bkSlots').innerHTML=gs.map(function(g){
       var any=g.list.some(function(x){return x.free});
-      return '<div class="slot-grp"><h5>'+g.lab+' <small>'+toHM(g.s)+' às '+toHM(g.e)+'</small></h5>'+(g.list.length?'<div class="slot-row">'+g.list.map(function(x){return '<button type="button" class="slot" data-m="'+x.m+'" aria-pressed="'+(x.m===st.time)+'"'+(x.free?'':' disabled aria-label="'+toHM(x.m)+' ocupado"')+'>'+toHM(x.m)+'</button>'}).join('')+'</div>':'')+(any?'':'<div class="empty-s">Sem horários livres neste turno.</div>')+'</div>';
+      return '<div class="slot-grp"><h5>'+g.lab+' <small>'+rangesTxt(g)+'</small></h5>'+(g.list.length?'<div class="slot-row">'+g.list.map(function(x){return '<button type="button" class="slot" data-m="'+x.m+'" aria-pressed="'+(x.m===st.time)+'"'+(x.free?'':' disabled aria-label="'+toHM(x.m)+' ocupado"')+'>'+toHM(x.m)+'</button>'}).join('')+'</div>':'')+(any?'':'<div class="empty-s">Sem horários livres neste turno.</div>')+'</div>';
     }).join('');
     if(st.time!=null){var still=gs.some(function(g){return g.list.some(function(x){return x.m===st.time&&x.free})});if(!still){st.time=null;$$('.slot[aria-pressed="true"]').forEach(function(b){b.setAttribute('aria-pressed','false')})}}
     renderTicket();
@@ -1522,17 +1548,33 @@ function slotsAny(dateStr,dur){
   function renderSched(){
     if(!draft)draft=clone(S.sched);
     $('#schedEd').innerHTML=BNAMES.map(function(n){var c=draft.barbers[n];
-      return '<div class="sc" data-b="'+n+'"><h3>'+n+'</h3><div class="times">'+
-        '<label>Manhã<span class="pair"><input type="time" step="1800" data-f="manha.s" value="'+c.manha.s+'" aria-label="'+n+' manhã início"><input type="time" step="1800" data-f="manha.e" value="'+c.manha.e+'" aria-label="'+n+' manhã fim"></span></label>'+
-        '<label>Tarde<span class="pair"><input type="time" step="1800" data-f="tarde.s" value="'+c.tarde.s+'" aria-label="'+n+' tarde início"><input type="time" step="1800" data-f="tarde.e" value="'+c.tarde.e+'" aria-label="'+n+' tarde fim"></span></label></div>'+
-        '<div class="wk">'+[1,2,3,4,5,6,0].map(function(d){var w=c.week[d]||{};return '<div class="wk-r"><span>'+DNL[d]+(w.te&&w.t?' <small style="color:var(--smoke);font-family:var(--f-mono);font-size:11px">tarde até '+w.te+'</small>':'')+'</span><button type="button" class="tg" data-d="'+d+'" data-p="m" aria-pressed="'+!!w.m+'">Manhã</button><button type="button" class="tg" data-d="'+d+'" data-p="t" aria-pressed="'+!!w.t+'">Tarde</button></div>'}).join('')+'</div></div>';
+      return '<div class="sc" data-b="'+n+'"><h3>'+n+'</h3><div class="wk">'+[1,2,3,4,5,6,0].map(function(d){var L=c.days[d]||[];
+        return '<div class="dy" data-d="'+d+'"><div class="dy-h"><b>'+DNL[d]+'</b>'+(L.length?'<span class="dy-sum">'+L.map(function(x){return x.s+'–'+x.e}).join(' · ')+'</span>':'<span class="dy-off">Fechado</span>')+'</div>'+
+          '<div class="dy-l">'+L.map(function(x,i){return '<div class="iv" data-i="'+i+'"><input type="time" step="900" data-k="s" value="'+x.s+'" aria-label="'+n+' '+DNL[d]+' turno '+(i+1)+' início"><span class="ate">até</span><input type="time" step="900" data-k="e" value="'+x.e+'" aria-label="'+n+' '+DNL[d]+' turno '+(i+1)+' fim"><button type="button" class="iv-x" data-act="del" aria-label="Remover turno">'+icon('i-x')+'</button></div>'}).join('')+'</div>'+
+          '<div class="dy-a"><button type="button" class="tg" data-act="add">+ Turno</button>'+(L.length?'<button type="button" class="tg" data-act="copy">Copiar para os outros dias</button>':'')+'</div></div>'}).join('')+'</div></div>';
     }).join('');
   }
-  $('#schedEd').addEventListener('click',function(e){var t=e.target.closest('.tg');if(!t)return;var n=t.closest('.sc').dataset.b,w=draft.barbers[n].week[t.dataset.d]||(draft.barbers[n].week[t.dataset.d]={});w[t.dataset.p]=!w[t.dataset.p];t.setAttribute('aria-pressed',!!w[t.dataset.p])});
-  $('#schedEd').addEventListener('change',function(e){var i=e.target.closest('input[type=time]');if(!i)return;var n=i.closest('.sc').dataset.b,f=i.dataset.f.split('.');draft.barbers[n][f[0]][f[1]]=i.value});
+  function lastEnd(L){return L.length?toM(L[L.length-1].e):-1}
+  $('#schedEd').addEventListener('click',function(e){
+    var b=e.target.closest('[data-act]');if(!b)return;
+    var n=b.closest('.sc').dataset.b,d=b.closest('.dy').dataset.d,days=draft.barbers[n].days,L=days[d]=days[d]||[];
+    if(b.dataset.act==='add'){var st=lastEnd(L)<0?480:Math.min(lastEnd(L)+60,1380);var en=Math.min(st+240,1440-15);if(st>=en){toast('Não cabe outro turno depois das 23h.');return}L.push({s:toHM(st),e:toHM(en)})}
+    else if(b.dataset.act==='del'){L.splice(+b.closest('.iv').dataset.i,1)}
+    else if(b.dataset.act==='copy'){var src=clone(L);[0,1,2,3,4,5,6].forEach(function(k){if(String(k)!==d&&(days[k]||[]).length)days[k]=clone(src)});toast('Copiado para os outros dias em que '+n+' trabalha. Toque em Salvar para aplicar.')}
+    renderSched();
+  });
+  $('#schedEd').addEventListener('change',function(e){var i=e.target.closest('input[type=time]');if(!i)return;
+    var n=i.closest('.sc').dataset.b,d=i.closest('.dy').dataset.d,x=draft.barbers[n].days[d][+i.closest('.iv').dataset.i];x[i.dataset.k]=i.value;
+    var h=i.closest('.dy').querySelector('.dy-sum');if(h)h.textContent=draft.barbers[n].days[d].map(function(y){return y.s+'–'+y.e}).join(' · ')});
+  function schedProblem(){
+    for(var a=0;a<BNAMES.length;a++){var n=BNAMES[a];for(var d=0;d<7;d++){var L=(draft.barbers[n].days[d]||[]).slice();
+      for(var i=0;i<L.length;i++){if(!L[i].s||!L[i].e||toM(L[i].s)>=toM(L[i].e))return n+', '+DNL[d]+': o início do turno precisa ser antes do fim.'}
+      L.sort(function(p,q){return toM(p.s)-toM(q.s)});
+      for(var j=1;j<L.length;j++){if(toM(L[j].s)<toM(L[j-1].e))return n+', '+DNL[d]+': dois turnos estão se sobrepondo.'}}}
+    return '';
+  }
   $('#schedSave').addEventListener('click',function(){
-    var bad=BNAMES.some(function(n){var c=draft.barbers[n];return toM(c.manha.s)>=toM(c.manha.e)||toM(c.tarde.s)>=toM(c.tarde.e)});
-    if(bad){toast('O início de cada turno precisa ser antes do fim.');return}
+    var pr=schedProblem();if(pr){toast(pr);return}
     draft.blocks=clone(S.sched.blocks);
     saveSched(draft).then(function(){draft=null;toast('Horários salvos. A agenda do site já mostra os novos horários.');renderSched()},function(){});
   });
