@@ -10,7 +10,7 @@
 <meta property="og:description" content="Agende seu corte com Baron ou Vitor. Av. Vital Brasil, 1165 · Botucatu - SP.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b0b0b'/%3E%3Cpath d='M41 42H25V70H75V42H59' fill='none' stroke='%23ece4d6' stroke-width='3'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-family='Georgia' font-size='20' fill='%23ece4d6'%3EB%3C/text%3E%3C/svg%3E">
 <script>if(/^baronadmin\./.test(location.hostname)||/[?&]app=admin/.test(location.search))document.documentElement.classList.add("app-admin")</script>
-<style>html.app-admin nav.links,html.app-admin .book-top,html.app-admin #menuBtn,html.app-admin #sheet,html.app-admin footer,html.app-admin #waFab,html.app-admin #intro{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<style>html.app-admin nav.links,html.app-admin .book-top,html.app-admin #menuBtn,html.app-admin #sheet,html.app-admin footer,html.app-admin #waFab,html.app-admin #intro{display:none!important}:root{padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 
@@ -87,8 +87,8 @@ html.clean .ph-tag,html.clean .ph-only{display:none!important}
 .btn.sm{min-height:44px;padding:0 18px;font-size:15px}
 
 /* ---------- header (barra translúcida estilo iOS) ---------- */
-header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(14,12,11,.62);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
-header.top.scrolled{border-bottom-color:var(--line);background:rgba(14,12,11,.82)}
+header.top{position:sticky;top:0;padding-top:env(safe-area-inset-top,0px);z-index:50;background:rgba(14,12,11,.97);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid transparent;transition:border-color .3s,background .3s}
+header.top.scrolled{border-bottom-color:var(--line);background:#0e0c0b}
 .top .wrap{display:flex;align-items:center;gap:24px;height:64px}
 .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
 .brand .crest{width:36px;height:36px}
