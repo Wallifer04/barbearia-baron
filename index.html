@@ -1195,14 +1195,14 @@ function normSched(s){
   return o;
 }
 
-var API={url:'https://xagvcobzqwalndxfzhsp.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhZ3Zjb2J6cXdhbG5keGZ6aHNwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM3NDczMzUsImV4cCI6MjEwOTMyMzMzNX0.jtw60q0XvTkEdDKuspRWlL1ZOVQEPGoiqNdUpbMAckI'};
+var API={url:'https://xagvcobzqwalndxfzhsp.supabase.co',key:'sb_publishable_TTd9ofT23syF0jR3ahYHcQ_35zQTGPE'};
 var S={mode:'loading',bookings:[],sched:defaultSched(),ready:false,admin:null,online:true};
 function lsGet(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}}
 function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
 var subs=[];function onData(f){subs.push(f)}function emit(){subs.forEach(function(f){try{f()}catch(e){console.error(e)}})}
 function rpc(fn,body){
   var ctl=('AbortController' in window)?new AbortController():null,t=ctl?setTimeout(function(){ctl.abort()},15000):0;
-  return fetch(API.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':API.key,'Authorization':'Bearer '+API.key,'Content-Type':'application/json'},body:JSON.stringify(body||{}),signal:ctl?ctl.signal:undefined,cache:'no-store'})
+  return fetch(API.url+'/rest/v1/rpc/'+fn,{method:'POST',headers:{'apikey':API.key,'Content-Type':'application/json'},body:JSON.stringify(body||{}),signal:ctl?ctl.signal:undefined,cache:'no-store'})
     .then(function(r){clearTimeout(t);if(!r.ok)throw {error:'rede',status:r.status};return r.json()},function(e){clearTimeout(t);throw {error:'rede'}});
 }
 function mapB(b){b.lembreteEnviado=!!b.lembrete_enviado;return b}
