@@ -333,7 +333,7 @@ html.io .rv.pending{opacity:0;transform:translateY(28px)}
 .booker{display:grid;grid-template-columns:1.15fr .85fr;gap:24px;align-items:start}
 .panel-b{padding:clamp(24px,4vw,40px);border-radius:28px;background:var(--ink-2);border:1px solid var(--line);display:grid;gap:28px;min-width:0}
 .field{display:grid;gap:12px}
-.field>label,.field>.lab{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--smoke)}
+.field>label,.field>.lab,.wk-nav>.lab{font-family:var(--f-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--smoke)}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chip{min-height:44px;padding:0 16px;border-radius:12px;border:1px solid var(--line);background:var(--ink);cursor:pointer;font-size:15px;display:inline-flex;align-items:center;gap:8px;transition:border-color .25s,background .25s,transform .3s var(--ease)}
 .chip:hover{border-color:rgba(201,164,106,.45)}
@@ -390,6 +390,32 @@ input.txt:focus{outline:none;border-color:var(--brass)}
 .summary .acts .btn{width:100%}
 .summary .hint{font-size:13.5px;color:var(--smoke);margin-top:12px}
 @media (max-width:900px){.booker{grid-template-columns:1fr}.summary{position:static}}
+.wk-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.wk-sw{display:flex;align-items:center;gap:6px}
+.wk-sw button{width:40px;height:40px;border-radius:12px;border:1px solid var(--line);background:var(--ink);color:var(--bone);font-size:22px;line-height:1;cursor:pointer}
+.wk-sw button:disabled{opacity:.3;cursor:default}
+#wkLab{min-width:112px;text-align:center;font-size:14px;font-weight:600;display:grid;line-height:1.2}
+#wkLab small{font-family:var(--f-mono);font-size:11px;color:var(--smoke);font-weight:400}
+.mini-sum{display:none}.sm-only{display:none}
+@media (max-width:760px){.lg-only{display:none}.sm-only{display:inline}}
+@media (max-width:760px){
+  [data-page="agendar"] .page-hero .lead{display:none}
+  [data-page="agendar"]{padding-bottom:84px}
+  [data-page="agendar"] .ticket{display:none}
+  [data-page="agendar"] #bkDone{margin-top:0}
+  body.done-bk [data-page="agendar"] .ticket{display:grid}
+  #bkActs{display:grid;position:fixed;left:0;right:0;bottom:0;z-index:40;margin:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:#0e0c0b;box-shadow:0 -12px 30px rgba(0,0,0,.45);border-top:1px solid var(--line);grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:12px}
+  #bkActs .btn{width:auto;padding:0 18px}
+  #bkActs .hint{display:none}
+  .mini-sum{display:grid;min-width:0;font-size:13px;line-height:1.35}
+  .mini-sum b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mini-sum span{color:var(--smoke);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #bkSlots .slot-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .slot{min-height:42px;font-size:13.5px}
+  .rem-opt{padding:12px 14px}.rem-opt small{font-size:13px}
+  body.pg-agendar .wa-fab{display:none}
+  body:not(.pg-agendar)>#bkActs{display:none!important}
+}
 .how{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
 .how>div{padding:24px;border-radius:var(--r-l);border:1px solid var(--line);display:grid;gap:10px}
 .how b{font-family:var(--f-mono);font-size:12px;color:var(--brass)}
@@ -886,7 +912,7 @@ main{padding-bottom:64px}
           <div class="svc-grid" id="bkSvc" role="radiogroup" aria-label="Serviço"></div>
         </div>
         <div class="field"><span class="lab">2 · Barbeiro</span><div class="chips" id="bkBarber"></div></div>
-        <div class="field"><span class="lab">3 · Dia</span><div class="days" id="bkDays"></div></div>
+        <div class="field"><div class="wk-nav"><span class="lab">3 · Dia</span><div class="wk-sw"><button type="button" id="wkPrev" aria-label="Semana anterior">‹</button><span id="wkLab">Esta semana</span><button type="button" id="wkNext" aria-label="Próxima semana">›</button></div></div><div class="days" id="bkDays"></div></div>
         <div class="field"><span class="lab">4 · Horário</span><div id="bkSlots" class="slots"></div></div>
         <div class="field two">
           <div class="field"><label for="bkName">5 · Seu nome</label><input class="txt" id="bkName" autocomplete="name" placeholder="Nome e sobrenome"></div>
@@ -909,7 +935,8 @@ main{padding-bottom:64px}
           <div class="done-stamp" id="tkStamp" hidden><svg class="i"><use href="#i-check"/></svg>Reservado</div>
         </div>
         <div class="acts" id="bkActs">
-          <button class="btn" id="bkConfirm" type="button" disabled><svg class="i"><use href="#i-check"/></svg>Confirmar agendamento</button>
+          <div class="mini-sum" id="bkMini"></div>
+          <button class="btn" id="bkConfirm" type="button" disabled><svg class="i"><use href="#i-check"/></svg><span class="lg-only">Confirmar agendamento</span><span class="sm-only">Confirmar</span></button>
           <p class="hint" id="bkHint">Escolha um horário e preencha nome e WhatsApp.</p>
         </div>
         <div class="acts" id="bkDone" hidden>
@@ -1349,25 +1376,34 @@ function slotsAny(dateStr,dur){
   bEl.addEventListener('click',function(e){var b=e.target.closest('.chip');if(!b)return;st.barber=b.dataset.n;st.time=null;render()});
 
   var dEl=$('#bkDays'),days=[];
-  function buildDays(){days=[];var n=new Date();for(var i=0;i<7;i++)days.push(ymd(new Date(n.getFullYear(),n.getMonth(),n.getDate()+i,12)))}
+  var WK_MAX=4,WKL=['Esta semana','Próxima semana','Em 2 semanas','Em 3 semanas','Em 4 semanas'];st.week=0;
+  function buildDays(){days=[];var n=new Date();for(var i=st.week*7;i<st.week*7+7&&i<=30;i++)days.push(ymd(new Date(n.getFullYear(),n.getMonth(),n.getDate()+i,12)))}
   buildDays();
+  function setWeek(w){if(w<0||w>WK_MAX)return;st.week=w;buildDays();st.day=null;st.time=null;render()}
+  $('#wkPrev').addEventListener('click',function(){setWeek(st.week-1)});
+  $('#wkNext').addEventListener('click',function(){setWeek(st.week+1)});
   dEl.addEventListener('click',function(e){var b=e.target.closest('.day');if(!b||b.disabled)return;st.day=b.dataset.d;st.time=null;render()});
   $('#bkSlots').addEventListener('click',function(e){var b=e.target.closest('.slot');if(!b||b.disabled)return;st.time=+b.dataset.m;render()});
   ['bkName','bkTel'].forEach(function(id){$('#'+id).addEventListener('input',function(){renderTicket()})});
 
+  function fmtShort(d){var dt=fromYmd(d);return dt.getDate()+'/'+String(dt.getMonth()+1).padStart(2,'0')}
   function groups(day){return st.barber==='Sem preferência'?slotsAny(day,st.svc.t):slotsFor(st.barber,day,st.svc.t)}
   function hasFree(day){return groups(day).some(function(g){return g.list.some(function(x){return x.free})})}
 
   function render(){
     if(st.done)return;
     $$('.chip',bEl).forEach(function(b){b.setAttribute('aria-pressed',b.dataset.n===st.barber)});
-    if(!st.day||!hasFree(st.day)){st.day=days.filter(hasFree)[0]||days[0]}
-    dEl.innerHTML=days.map(function(d,i){var dt=fromYmd(d),ok=hasFree(d);return '<button type="button" class="day" data-d="'+d+'" aria-pressed="'+(d===st.day)+'"'+(ok?'':' disabled title="Sem horários"')+'><small>'+(i===0?'Hoje':DN[dt.getDay()])+'</small><b>'+dt.getDate()+'</b></button>'}).join('');
+    if(!st.day||days.indexOf(st.day)<0||!hasFree(st.day)){st.day=days.filter(hasFree)[0]||days[0]}
+    $('#wkLab').innerHTML=WKL[st.week]+'<small>'+fmtShort(days[0])+' a '+fmtShort(days[days.length-1])+'</small>';$('#wkPrev').disabled=st.week===0;$('#wkNext').disabled=st.week===WK_MAX;
+    var today=ymd(new Date());
+    dEl.innerHTML=days.map(function(d){var dt=fromYmd(d),ok=hasFree(d);return '<button type="button" class="day" data-d="'+d+'" aria-pressed="'+(d===st.day)+'"'+(ok?'':' disabled title="Sem horários"')+'><small>'+(d===today?'Hoje':DN[dt.getDay()])+'</small><b>'+dt.getDate()+'</b></button>'}).join('');
     var gs=groups(st.day);
     if(!S.ready){$('#bkSlots').innerHTML='<div class="empty-s">'+(S.mode==='offline'?'Sem conexão com a agenda. Verifique a internet; tentamos de novo sozinhos.':'Carregando horários livres…')+'</div>';renderTicket();return}
     if(!gs.length){$('#bkSlots').innerHTML='<div class="empty-s">A Baron não atende neste dia. Escolha outro dia.</div>'}
-    else $('#bkSlots').innerHTML=gs.map(function(g){
-      var any=g.list.some(function(x){return x.free});
+    else if(!gs.some(function(g){return g.list.some(function(x){return x.free})})){$('#bkSlots').innerHTML='<div class="empty-s">Sem horários livres neste dia. Escolha outro dia.</div>'}
+    else $('#bkSlots').innerHTML=gs.filter(function(g){return g.list.some(function(x){return x.free})}).map(function(g){
+      g={k:g.k,lab:g.lab,s:g.s,e:g.e,r:g.r,list:g.list.filter(function(x){return x.free})};
+      var any=true;
       return '<div class="slot-grp"><h5>'+g.lab+' <small>'+rangesTxt(g)+'</small></h5>'+(g.list.length?'<div class="slot-row">'+g.list.map(function(x){return '<button type="button" class="slot" data-m="'+x.m+'" aria-pressed="'+(x.m===st.time)+'"'+(x.free?'':' disabled aria-label="'+toHM(x.m)+' ocupado"')+'>'+toHM(x.m)+'</button>'}).join('')+'</div>':'')+(any?'':'<div class="empty-s">Sem horários livres neste turno.</div>')+'</div>';
     }).join('');
     if(st.time!=null){var still=gs.some(function(g){return g.list.some(function(x){return x.m===st.time&&x.free})});if(!still){st.time=null;$$('.slot[aria-pressed="true"]').forEach(function(b){b.setAttribute('aria-pressed','false')})}}
@@ -1379,6 +1415,7 @@ function slotsAny(dateStr,dur){
     var nm=$('#bkName').value.trim(),tel=digits($('#bkTel').value);
     var ok=st.time!=null&&nm.length>=2&&tel.length>=10;
     $('#bkConfirm').disabled=!ok;
+    $('#bkMini').innerHTML='<b>'+plusify(st.svc.n)+' · '+brl(st.svc.p)+'</b><span>'+(st.time!=null?fmtDay(st.day)+' às '+toHM(st.time):'Escolha um horário')+(st.barber!=='Sem preferência'?' · '+st.barber:'')+'</span>';
     $('#bkHint').textContent=st.time==null?'Escolha um horário livre.':(nm.length<2?'Preencha seu nome.':(tel.length<10?'Preencha seu WhatsApp com DDD.':'Tudo pronto. Toque em confirmar.'));
   }
   $('#bkConfirm').addEventListener('click',function(){
@@ -1388,7 +1425,7 @@ function slotsAny(dateStr,dur){
     $('#bkConfirm').disabled=true;$('#bkConfirm').classList.add('busy');st.done=true;
     addBooking(b).then(function(d){
       $('#bkConfirm').classList.remove('busy');barber=d.barber;b.barber=barber;
-      $('#tkState').textContent='';$('#tkBarber').textContent=barber;$('#tkDay').textContent=fmtDay(b.date);$('#tkTime').textContent=b.start+' – '+toHM(toM(b.start)+b.dur);$('#tkStamp').hidden=false;$('#bkActs').hidden=true;$('#bkDone').hidden=false;
+      $('#tkState').textContent='';$('#tkBarber').textContent=barber;$('#tkDay').textContent=fmtDay(b.date);$('#tkTime').textContent=b.start+' – '+toHM(toM(b.start)+b.dur);$('#tkStamp').hidden=false;$('#bkActs').hidden=true;$('#bkDone').hidden=false;document.body.classList.add('done-bk');if(matchMedia('(max-width:900px)').matches)setTimeout(function(){var y=$('.summary').getBoundingClientRect().top+scrollY-80;scrollTo({top:y,behavior:'smooth'})},60);
       $('#goWa').setAttribute('data-wa','Olá, Barbearia Baron! Sou '+nm+' e acabei de agendar pelo site: '+b.svc+' com '+barber+', '+fmtDay(b.date)+' às '+b.start+'.');
       $('#goCal').href=gcalUrl(b);
       toast('Horário reservado: '+fmtDay(b.date)+' às '+b.start+' com '+barber+'.'+(b.lembrete?' Você recebe um lembrete 1 hora antes.':''));
@@ -1396,7 +1433,8 @@ function slotsAny(dateStr,dur){
       $('#bkConfirm').classList.remove('busy');st.done=false;st.time=null;toast(errMsg(e));render();
     });
   });
-  $('#bkAgain').addEventListener('click',function(){st.done=false;st.time=null;$('#tkState').textContent='Rascunho';$('#tkStamp').hidden=true;$('#bkActs').hidden=false;$('#bkDone').hidden=true;render()});
+  (function(){var bar=$('#bkActs'),home=bar.parentNode,next=bar.nextSibling,mq=matchMedia('(max-width:760px)');function place(){if(mq.matches){if(bar.parentNode!==document.body)document.body.appendChild(bar)}else if(bar.parentNode!==home){home.insertBefore(bar,next)}}place();if(mq.addEventListener)mq.addEventListener('change',place);else mq.addListener(place)})();
+  $('#bkAgain').addEventListener('click',function(){document.body.classList.remove('done-bk');if(matchMedia('(max-width:900px)').matches)setTimeout(function(){var y=$('#bkDays').getBoundingClientRect().top+scrollY-140;scrollTo({top:y,behavior:'smooth'})},60);st.done=false;st.time=null;$('#tkState').textContent='Rascunho';$('#tkStamp').hidden=true;$('#bkActs').hidden=false;$('#bkDone').hidden=true;render()});
 
   window.__bkPick=function(svcName,barber){
     if(svcName){var f=all.filter(function(s){return s.n===svcName})[0];if(f){st.svc=f;st.cat=f.cat;renderSvc()}}
@@ -1676,7 +1714,7 @@ window.addEventListener('scroll',function(){$('#top').classList.toggle('scrolled
     if(p==='contato') requestAnimationFrame(drawMap);
     if(p==='agendar'&&window.__bkThumb) requestAnimationFrame(window.__bkThumb);
     if(p==='admin'&&window.__admShow) window.__admShow();
-    document.body.classList.toggle('no-fab',p==='admin');
+    document.body.classList.toggle('no-fab',p==='admin');document.body.classList.toggle('pg-agendar',p==='agendar');
     $('#waFab').classList.remove('hello');
     document.title=APP?'Painel · Barbearia Baron':p==='inicio'?'Barbearia Baron':($('h1',v).textContent.trim()+' · Barbearia Baron');
   }
