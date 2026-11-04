@@ -9,7 +9,8 @@
 <meta property="og:title" content="Barbearia Baron">
 <meta property="og:description" content="Agende seu corte com Baron ou Vitor. Av. Vital Brasil, 1165 · Botucatu - SP.">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='48' fill='%230b0b0b'/%3E%3Cpath d='M41 42H25V70H75V42H59' fill='none' stroke='%23ece4d6' stroke-width='3'/%3E%3Ctext x='50' y='64' text-anchor='middle' font-family='Georgia' font-size='20' fill='%23ece4d6'%3EB%3C/text%3E%3C/svg%3E">
-<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<script>if(/^baronadmin\./.test(location.hostname)||/[?&]app=admin/.test(location.search))document.documentElement.classList.add("app-admin")</script>
+<style>html.app-admin nav.links,html.app-admin .book-top,html.app-admin #menuBtn,html.app-admin #sheet,html.app-admin footer,html.app-admin #waFab,html.app-admin #intro{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
 
@@ -628,7 +629,7 @@ main{padding-bottom:64px}
 
 <header class="top" id="top">
   <div class="wrap">
-    <a class="brand" href="#inicio" aria-label="Barbearia Baron, início">
+    <a class="brand" href="#inicio" onclick="if(document.documentElement.classList.contains('app-admin')){event.preventDefault();location.href='https://baron.velbrio.com/'}" aria-label="Barbearia Baron, início">
       <svg class="crest" aria-hidden="true"><use href="#crest"/></svg>
       <span><b>BARON</b><small>BARBEARIA</small></span>
     </a>
@@ -1604,7 +1605,9 @@ window.addEventListener('scroll',function(){$('#top').classList.toggle('scrolled
 /* ======= router (mesmo padrão do site Velbrio) ======= */
 (function(){
   var pages=$$('.view').map(function(v){return v.dataset.page});
+  var APP=document.documentElement.classList.contains('app-admin');
   function show(p){
+    if(APP) p='admin';
     if(pages.indexOf(p)<0) p='inicio';
     $$('.view').forEach(function(v){v.hidden=v.dataset.page!==p});
     $$('nav.links a').forEach(function(a){a.toggleAttribute('aria-current',a.getAttribute('href')==='#'+p);if(a.getAttribute('href')==='#'+p)a.setAttribute('aria-current','page')});
@@ -1617,7 +1620,7 @@ window.addEventListener('scroll',function(){$('#top').classList.toggle('scrolled
     if(p==='admin'&&window.__admShow) window.__admShow();
     document.body.classList.toggle('no-fab',p==='admin');
     $('#waFab').classList.remove('hello');
-    document.title=p==='inicio'?'Barbearia Baron':($('h1',v).textContent.trim()+' · Barbearia Baron');
+    document.title=APP?'Painel · Barbearia Baron':p==='inicio'?'Barbearia Baron':($('h1',v).textContent.trim()+' · Barbearia Baron');
   }
   window.__route=function(){show(location.hash.slice(1)||'inicio')};
   window.addEventListener('hashchange',window.__route);
