@@ -1233,7 +1233,7 @@ var ERR={ocupado:'Esse horário não está mais disponível. Escolha outro.',pas
 function errMsg(e){return (e&&ERR[e.error])||ERR.rede}
 function addBooking(b){
   if(b.origem==='admin')return admCall('add',b).then(function(d){loadAdmin();return d});
-  return rpc('book',b).then(function(d){if(!d.ok)throw d;refresh();return d});
+  return rpc('book',{p:b}).then(function(d){if(!d.ok)throw d;refresh();return d});
 }
 function updBooking(id,patch){
   var p=patch.status?admCall('set_status',{id:id,status:patch.status}):admCall('reminder_sent',{id:id});
