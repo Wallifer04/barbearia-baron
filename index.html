@@ -513,7 +513,14 @@ input.txt:focus{outline:none;border-color:var(--brass)}
 .sc .times .pair{display:flex;gap:6px;align-items:center}
 .sc input[type=time]{min-height:42px;border-radius:10px;border:1px solid var(--line);background:var(--ink);color:var(--bone);font-family:var(--f-mono);padding:0 8px;width:100%;min-width:0}
 .wk{display:grid;gap:4px}
-.dy{display:grid;gap:10px;padding:14px 0;border-bottom:1px solid rgba(236,228,214,.06)}
+.dy{display:grid;gap:10px}
+#schedEd.sched{grid-template-columns:minmax(0,560px)}
+.ed-f{display:grid;gap:8px}.ed-f .lab{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--smoke)}
+.ed-days{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:3px;border-radius:14px;background:var(--ink);border:1px solid var(--line)}
+.ed-days button{min-height:52px;border:0;border-radius:11px;background:transparent;color:var(--bone);cursor:pointer;display:grid;place-content:center;gap:2px;padding:4px 0;font:inherit}
+.ed-days button b{font-size:14px;font-weight:600}.ed-days button small{font-size:10px;color:var(--smoke);white-space:nowrap}
+.ed-days button[aria-selected="true"]{background:var(--brass);color:var(--ink)}.ed-days button[aria-selected="true"] small{color:rgba(14,12,11,.7)}
+@media (max-width:420px){.ed-days button small{font-size:9px}}
 .dy-h{display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap}
 .dy-h b{font-weight:600}.dy-sum{font-family:var(--f-mono);font-size:12.5px;color:var(--brass)}.dy-off{font-size:13px;color:var(--smoke)}
 .dy-l{display:grid;gap:8px}.dy-l:empty{display:none}
@@ -961,7 +968,7 @@ main{padding-bottom:64px}
       </div>
 
       <div class="adm-pane" data-pane="horarios" hidden>
-        <p class="lead" style="margin-bottom:24px">Monte o expediente de cada barbeiro dia a dia, com quantos turnos quiser (por exemplo 08:00–12:00, 13:00–16:00 e 20:00–21:00). Dia sem turno fica fechado. Ao salvar, a agenda do site muda na hora.</p>
+        <p class="lead" style="margin-bottom:24px">Escolha o barbeiro e o dia. Cada dia pode ter quantos turnos quiser; sem turno, fica fechado. Ao salvar, a agenda do site muda na hora.</p>
         <div class="sched" id="schedEd"></div>
         <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:24px">
           <button class="btn" id="schedSave" type="button"><svg class="i"><use href="#i-check"/></svg>Salvar horários</button>
@@ -1545,15 +1552,21 @@ function slotsAny(dateStr,dur){
 
   /* horários dos barbeiros */
   var draft=null;
+  var ED={b:BNAMES[0],d:String((new Date().getDay()))};
   function renderSched(){
     if(!draft)draft=clone(S.sched);
-    $('#schedEd').innerHTML=BNAMES.map(function(n){var c=draft.barbers[n];
-      return '<div class="sc" data-b="'+n+'"><h3>'+n+'</h3><div class="wk">'+[1,2,3,4,5,6,0].map(function(d){var L=c.days[d]||[];
-        return '<div class="dy" data-d="'+d+'"><div class="dy-h"><b>'+DNL[d]+'</b>'+(L.length?'<span class="dy-sum">'+L.map(function(x){return x.s+'–'+x.e}).join(' · ')+'</span>':'<span class="dy-off">Fechado</span>')+'</div>'+
-          '<div class="dy-l">'+L.map(function(x,i){return '<div class="iv" data-i="'+i+'"><input type="time" step="900" data-k="s" value="'+x.s+'" aria-label="'+n+' '+DNL[d]+' turno '+(i+1)+' início"><span class="ate">até</span><input type="time" step="900" data-k="e" value="'+x.e+'" aria-label="'+n+' '+DNL[d]+' turno '+(i+1)+' fim"><button type="button" class="iv-x" data-act="del" aria-label="Remover turno">'+icon('i-x')+'</button></div>'}).join('')+'</div>'+
-          '<div class="dy-a"><button type="button" class="tg" data-act="add">+ Turno</button>'+(L.length?'<button type="button" class="tg" data-act="copy">Copiar para os outros dias</button>':'')+'</div></div>'}).join('')+'</div></div>';
-    }).join('');
+    var c=draft.barbers[ED.b],d=ED.d,L=c.days[d]||[];
+    $('#schedEd').innerHTML='<div class="sc" data-b="'+ED.b+'">'+
+      '<div class="ed-f"><span class="lab">Barbeiros</span><div class="chips" id="edB">'+BNAMES.map(function(n){return '<button type="button" class="chip" data-edb="'+n+'" aria-pressed="'+(n===ED.b)+'">'+n+'</button>'}).join('')+'</div></div>'+
+      '<div class="ed-days" role="tablist" aria-label="Dias da semana">'+[1,2,3,4,5,6,0].map(function(k){var n=(c.days[k]||[]).length;return '<button type="button" role="tab" data-edd="'+k+'" aria-selected="'+(String(k)===d)+'"><b>'+DN[k]+'</b><small>'+(n?n+(n>1?' turnos':' turno'):'fechado')+'</small></button>'}).join('')+'</div>'+
+      '<div class="dy" data-d="'+d+'"><div class="dy-h"><b>'+DNL[d]+'</b>'+(L.length?'':'<span class="dy-off">Fechado</span>')+'</div>'+
+        '<div class="dy-l">'+L.map(function(x,i){return '<div class="iv" data-i="'+i+'"><input type="time" step="900" data-k="s" value="'+x.s+'" aria-label="Turno '+(i+1)+' início"><span class="ate">até</span><input type="time" step="900" data-k="e" value="'+x.e+'" aria-label="Turno '+(i+1)+' fim"><button type="button" class="iv-x" data-act="del" aria-label="Remover turno">'+icon('i-x')+'</button></div>'}).join('')+'</div>'+
+        '<div class="dy-a"><button type="button" class="tg" data-act="add">+ Turno</button>'+(L.length?'<button type="button" class="tg" data-act="copy">Copiar para os outros dias</button>':'')+'</div></div></div>';
   }
+  $('#schedEd').addEventListener('click',function(e){
+    var b=e.target.closest('[data-edb]');if(b){ED.b=b.dataset.edb;renderSched();return}
+    var t=e.target.closest('[data-edd]');if(t){ED.d=t.dataset.edd;renderSched();return}
+  });
   function lastEnd(L){return L.length?toM(L[L.length-1].e):-1}
   $('#schedEd').addEventListener('click',function(e){
     var b=e.target.closest('[data-act]');if(!b)return;
@@ -1565,12 +1578,12 @@ function slotsAny(dateStr,dur){
   });
   $('#schedEd').addEventListener('change',function(e){var i=e.target.closest('input[type=time]');if(!i)return;
     var n=i.closest('.sc').dataset.b,d=i.closest('.dy').dataset.d,x=draft.barbers[n].days[d][+i.closest('.iv').dataset.i];x[i.dataset.k]=i.value;
-    var h=i.closest('.dy').querySelector('.dy-sum');if(h)h.textContent=draft.barbers[n].days[d].map(function(y){return y.s+'–'+y.e}).join(' · ')});
+  });
   function schedProblem(){
     for(var a=0;a<BNAMES.length;a++){var n=BNAMES[a];for(var d=0;d<7;d++){var L=(draft.barbers[n].days[d]||[]).slice();
-      for(var i=0;i<L.length;i++){if(!L[i].s||!L[i].e||toM(L[i].s)>=toM(L[i].e))return n+', '+DNL[d]+': o início do turno precisa ser antes do fim.'}
+      for(var i=0;i<L.length;i++){if(!L[i].s||!L[i].e||toM(L[i].s)>=toM(L[i].e)){ED.b=n;ED.d=String(d);renderSched();return n+', '+DNL[d]+': o início do turno precisa ser antes do fim.'}}
       L.sort(function(p,q){return toM(p.s)-toM(q.s)});
-      for(var j=1;j<L.length;j++){if(toM(L[j].s)<toM(L[j-1].e))return n+', '+DNL[d]+': dois turnos estão se sobrepondo.'}}}
+      for(var j=1;j<L.length;j++){if(toM(L[j].s)<toM(L[j-1].e)){ED.b=n;ED.d=String(d);renderSched();return n+', '+DNL[d]+': dois turnos estão se sobrepondo.'}}}}
     return '';
   }
   $('#schedSave').addEventListener('click',function(){
